@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talelife.edu.word.dao.CourseWordMapper">
+
+	<resultMap id="resultMap" type="com.talelife.edu.word.dao.entity.CourseWord">
+        <result property="id" column="id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="name" column="name"/>
+        <result property="soundmark" column="soundmark"/>
+        <result property="mean" column="mean"/>
+        <result property="url" column="url"/>
+        <result property="sort" column="sort"/>
+	</resultMap>
+
+  <sql id="baseColumns">
+  		<choose>
+  			<when test="_parameter!=null and _parameter.containsKey('properties')">
+  				<trim suffixOverrides=","> 
+  					  				<if test="properties.contains('id')">
+						id,
+					</if>
+					  				<if test="properties.contains('courseId')">
+						course_id,
+					</if>
+					  				<if test="properties.contains('name')">
+						name,
+					</if>
+					  				<if test="properties.contains('soundmark')">
+						soundmark,
+					</if>
+					  				<if test="properties.contains('mean')">
+						mean,
+					</if>
+					  				<if test="properties.contains('url')">
+						url,
+					</if>
+					  				<if test="properties.contains('sort')">
+						sort,
+					</if>
+				  				</trim>
+  			</when>
+  			<otherwise>
+  			<trim suffixOverrides=","> 
+		        				   id,
+								   course_id,
+								   name,
+								   soundmark,
+								   mean,
+								   url,
+								   sort,
+						  	</trim>
+  			</otherwise>
+  		</choose>
+  </sql>
+  
+  <sql id="whereSql">
+		<if test="entity.id != null">
+			and id = #{entity.id}
+		</if>
+		<if test="entity.courseId != null">
+			and course_id = #{entity.courseId}
+		</if>
+		<if test="entity.name != null">
+			and name = #{entity.name}
+		</if>
+		<if test="entity.soundmark != null">
+			and soundmark = #{entity.soundmark}
+		</if>
+		<if test="entity.mean != null">
+			and mean = #{entity.mean}
+		</if>
+		<if test="entity.url != null">
+			and url = #{entity.url}
+		</if>
+		<if test="entity.sort != null">
+			and sort = #{entity.sort}
+		</if>
+  </sql>
+  
+  	<select id="getById" resultMap="resultMap">
+		select <include refid="baseColumns"/>
+		from t_course_word
+		   where id = #{id}
+								</select>
+	
+	<select id="getByIds" resultMap="resultMap">
+	     select <include refid="baseColumns"/> from t_course_word
+		      where id in
+								     <foreach collection="ids" item="id" index="index"  open="(" close=")" separator=",">
+               #{id}
+         </foreach>  
+	</select>
+
+	<select id="get" resultMap="resultMap" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+		select <include refid="baseColumns"/> from
+         t_course_word  where 1=1 <include refid="whereSql"/> limit 1
+	</select>
+	
+	<select id="findList"  parameterType="com.talelife.edu.word.dao.entity.CourseWord" resultMap="resultMap">
+	     select <include refid="baseColumns"/> from t_course_word where 1=1 <include refid="whereSql"/>
+	</select>
+	
+	<select id="findAll" resultMap="resultMap">
+	     select <include refid="baseColumns"/> from t_course_word
+	</select>
+
+	<select id="getCount"  parameterType="com.talelife.edu.word.dao.entity.CourseWord" resultType="java.lang.Integer">
+         select count(*) from t_course_word where 1=1 <include refid="whereSql"/>
+    </select>
+
+    <insert id="save" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+       insert into t_course_word (
+		<trim suffixOverrides=","> 
+				<if test="entity.id != null">
+				id,
+			</if>
+				<if test="entity.courseId != null">
+				course_id,
+			</if>
+				<if test="entity.name != null">
+				name,
+			</if>
+				<if test="entity.soundmark != null">
+				soundmark,
+			</if>
+				<if test="entity.mean != null">
+				mean,
+			</if>
+				<if test="entity.url != null">
+				url,
+			</if>
+				<if test="entity.sort != null">
+				sort,
+			</if>
+			</trim>
+		) values (
+		<trim suffixOverrides=",">
+				<if test="entity.id != null">
+				#{entity.id},
+			</if>
+				<if test="entity.courseId != null">
+				#{entity.courseId},
+			</if>
+				<if test="entity.name != null">
+				#{entity.name},
+			</if>
+				<if test="entity.soundmark != null">
+				#{entity.soundmark},
+			</if>
+				<if test="entity.mean != null">
+				#{entity.mean},
+			</if>
+				<if test="entity.url != null">
+				#{entity.url},
+			</if>
+				<if test="entity.sort != null">
+				#{entity.sort},
+			</if>
+			</trim>
+	)
+    </insert>
+    
+    <insert id="batchSave" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+       insert into t_course_word (
+		<trim suffixOverrides=","> 
+					id,
+					course_id,
+					name,
+					soundmark,
+					mean,
+					url,
+					sort,
+				</trim>
+		) values 
+		<foreach collection="entities" item="entity" separator=",">
+		(
+		<trim suffixOverrides=",">
+					#{entity.id},
+					#{entity.courseId},
+					#{entity.name},
+					#{entity.soundmark},
+					#{entity.mean},
+					#{entity.url},
+					#{entity.sort},
+				</trim>
+	   )
+	   </foreach>
+    </insert>
+    
+    <update id="updateById" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+	    update t_course_word  set
+	     <trim suffixOverrides="," >
+									<if test="entity.courseId != null">
+				course_id = #{entity.courseId},
+			</if>
+								<if test="entity.name != null">
+				name = #{entity.name},
+			</if>
+								<if test="entity.soundmark != null">
+				soundmark = #{entity.soundmark},
+			</if>
+								<if test="entity.mean != null">
+				mean = #{entity.mean},
+			</if>
+								<if test="entity.url != null">
+				url = #{entity.url},
+			</if>
+								<if test="entity.sort != null">
+				sort = #{entity.sort},
+			</if>
+					  </trim>
+			 where id = #{entity.id}
+								</update>
+
+	 <update id="updateByIds" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+          update t_course_word  set
+	     <trim suffixOverrides="," >
+									<if test="entity.courseId != null">
+				course_id = #{entity.courseId},
+			</if>
+								<if test="entity.name != null">
+				name = #{entity.name},
+			</if>
+								<if test="entity.soundmark != null">
+				soundmark = #{entity.soundmark},
+			</if>
+								<if test="entity.mean != null">
+				mean = #{entity.mean},
+			</if>
+								<if test="entity.url != null">
+				url = #{entity.url},
+			</if>
+								<if test="entity.sort != null">
+				sort = #{entity.sort},
+			</if>
+					  </trim>
+			 where id in
+		  <foreach collection="ids" item="item" index="index"  open="(" close=")" separator=",">
+               #{item}
+         </foreach>
+								</update>
+	
+	<delete id="deleteById">
+        delete from t_course_word 
+	         where id = #{id}
+							    </delete>
+    
+     <delete id="deleteByIds">
+        delete from t_course_word 
+	         where id in 
+							        <foreach collection="ids" item="item" index="index"  open="(" close=")" separator=",">
+               #{item}
+        </foreach>  
+	</delete>
+    
+    <delete id="delete" parameterType="com.talelife.edu.word.dao.entity.CourseWord">
+        delete from t_course_word where 1=1 <include refid="whereSql"/> 
+    </delete>
+</mapper>
